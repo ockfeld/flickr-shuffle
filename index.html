@@ -54,7 +54,7 @@
 
   <script type="text/javascript">
     (function() {
-      // Keep sort focused on interestingness or relevance to avoid empty date-posted index boundaries
+      // Lock sort modes to prevent default fallbacks
       var sortModes = [
         "interestingness-desc",
         "relevance"
@@ -62,8 +62,8 @@
 
       var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
       
-      // Keep page range tightly bounded (1 to 15) to prevent out-of-bounds fallbacks to root
-      var randomPage = Math.floor(Math.random() * 15) + 1; 
+      // Random page from 2 to 56 to cover your entire active archive range
+      var randomPage = Math.floor(Math.random() * 55) + 2; 
       var randomSeed = Math.floor(Math.random() * 999999999);
 
       var destination = "https://www.flickr.com/search/?" +
