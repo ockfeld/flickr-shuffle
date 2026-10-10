@@ -56,11 +56,14 @@
     (function() {
       var sortModes = [
         "interestingness-desc",
-        "relevance"
+        "relevance",
+        "date-posted-asc",
+        "date-posted-desc"
       ];
 
       var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
-      var randomPage = Math.floor(Math.random() * 55) + 2; 
+      // Expanded range to account for 5000+ photos across multiple sort methods
+      var randomPage = Math.floor(Math.random() * 250) + 1;  
       var randomSeed = Math.floor(Math.random() * 999999999);
 
       var destination = "https://www.flickr.com/search/?" +
