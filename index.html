@@ -4,8 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shuffling Photo Archive...</title>
-  <!-- Native browser meta refresh backup set to 1 second -->
-  <meta http-equiv="refresh" content="1;url=https://www.flickr.com/search/?user_id=185082625%40N02&sort=interestingness-desc&page=1&view_all=1">
   <style>
     html, body {
       background-color: #0d0d0d !important;
@@ -30,8 +28,7 @@
   </style>
 </head>
 <body>
-  <div>[ SHUFFLING PHOTO ARCHIVE... ]</div>
-  <a id="flickr-link" href="https://www.flickr.com/search/?user_id=185082625%40N02&sort=interestingness-desc&page=1&view_all=1">Click here if you are not redirected automatically.</a>
+  <div id="splash">[ SHUFFLING PHOTO ARCHIVE... ]</div>
 
   <script type="text/javascript">
     (function() {
@@ -55,16 +52,13 @@
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      // Update the fallback link href
-      document.getElementById('flickr-link').href = destination;
+      // Append the fallback link safely via JS so there's only one line of text plus the link
+      var link = document.createElement('a');
+      link.href = destination;
+      link.innerText = "Click here if you are not redirected automatically.";
+      document.body.appendChild(link);
 
-      // Update the meta refresh tag dynamically
-      var metaRefresh = document.querySelector("meta[http-equiv='refresh']");
-      if (metaRefresh) {
-        metaRefresh.content = "1;url=" + destination;
-      }
-
-      // Fallback JS redirect just in case
+      // Redirect after 1 second
       setTimeout(function() {
         window.location.replace(destination);
       }, 1000);
