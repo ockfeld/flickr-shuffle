@@ -54,21 +54,18 @@
 
   <script type="text/javascript">
     (function() {
-      // Rotate sort vectors to pull from archive items, recent uploads, and highlights
+      // Keep sort focused on interestingness or relevance to avoid empty date-posted index boundaries
       var sortModes = [
         "interestingness-desc",
-        "date-posted-asc",
-        "date-posted-desc",
         "relevance"
       ];
 
       var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
       
-      // Safe pagination range spanning the stream without exceeding boundaries
-      var randomPage = Math.floor(Math.random() * 100) + 1; 
+      // Keep page range tightly bounded (1 to 15) to prevent out-of-bounds fallbacks to root
+      var randomPage = Math.floor(Math.random() * 15) + 1; 
       var randomSeed = Math.floor(Math.random() * 999999999);
 
-      // Query the full stream directly without restrictive text bottlenecks
       var destination = "https://www.flickr.com/search/?" +
         "user_id=185082625%40N02" +
         "&sort=" + randomSort +
