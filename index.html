@@ -1,34 +1,85 @@
-<!-- Native HTML Link Container styled with zero-radius industrial design -->
-<a class='shuffle-btn-link' href='https://ockfeld.github.io/flickr-shuffle/' target='_blank'>
-  🎲 shuffle photo archive
-</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ockfeld photo archive // shuffling...</title>
+  <style>
+    /* Minimal zero-radius dark splash screen */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #aeaeae;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .splash-card {
+      max-width: 440px;
+      width: 100%;
+      border: 1px solid #222222;
+      background-color: #0d0d0d;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .status-text {
+      color: #ffffff;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .sub-text {
+      color: #444444;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
 
-<style type='text/css'>
-/* Clean zero-radius industrial button layout */
-.shuffle-btn-link {
-    background-color: #0d0d0d !important;
-    color: #aeaeae !important;
-    border: 1px solid #222222 !important;
-    padding: 10px 18px !important;
-    font-family: "Courier New", Courier, monospace !important;
-    font-size: 12px !important;
-    letter-spacing: 1px !important;
-    text-transform: uppercase !important;
-    text-decoration: none !important;
-    text-align: center !important;
-    cursor: pointer !important;
-    border-radius: 0px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    display: block !important;
-    position: relative !important;
-    z-index: 999999 !important;
-    transition: all 0.15s ease-in-out !important;
-}
-.shuffle-btn-link:hover {
-    background-color: #161616 !important;
-    color: #ffffff !important;
-    border-color: #444444 !important;
-    text-decoration: none !important;
-}
-</style>
+  <script type="text/javascript">
+    (function() {
+      // High-coverage token pool
+      var searchTokens = [
+        "p", "img", "dsc", "dcim", "dscn", "pict",
+        "å", "ä", "ö", "film", "det",
+        "a", "e", "i", "o", "u", "_",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9"
+      ];
+
+      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      var randomSeed = Math.floor(Math.random() * 9999999);
+
+      // Direct search query jump
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&text=" + encodeURIComponent(randomToken) +
+        "&sort=interestingness-desc" +
+        "&page=1" +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
+
+      // Instant execution: replace current page history with zero hangtime
+      window.location.replace(destination);
+    })();
+  </script>
+</head>
+<body>
+
+  <div class="splash-card">
+    <div class="status-text">[ SHUFFLING PHOTO ARCHIVE... ]</div>
+    <div class="sub-text">ockfeld portal // zero-latency redirect</div>
+  </div>
+
+</body>
+</html>
