@@ -34,7 +34,7 @@
 
   <script type="text/javascript">
     (function() {
-      // Strict camera prefix pool only — no vowels, no digits, no symbols
+      // Pure camera prefixes only — no vowels, no digits, no symbols
       var searchTokens = [
         "p", "pict", "img", "dsc", "dscn"
       ];
@@ -48,6 +48,7 @@
         "&sort=interestingness-desc" +
         "&page=1" +
         "&view_all=1" +
+        "&v=clean" +
         "&_s=" + randomSeed;
 
       // Instantly map destination to the static link
