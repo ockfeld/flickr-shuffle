@@ -53,13 +53,13 @@
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      // Populate fallback link safely without wiping the DOM
+      // Populate fallback link
       document.getElementById('fallback').innerHTML = '<a href="' + destination + '">Click here if you are not redirected automatically.</a>';
 
-      // Wait 1.5 seconds before redirecting so the splash screen is readable
+      // Wait 2.5 seconds before redirecting
       setTimeout(function() {
         window.location.replace(destination);
-      }, 1500);
+      }, 2500);
     })();
   </script>
 </body>
