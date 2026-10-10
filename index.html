@@ -26,84 +26,58 @@
   </style>
 </head>
 <body>
-  <div id="splash">[ SHUFFLING PHOTO ARCHIVE... ]</div>
+  <div id="splash">[ SHUFFLING ENTIRE ARCHIVE... ]</div>
   <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
 
   <script type="text/javascript">
-    window.jsonFlickrFeed = function(data) {
-      var items = data.items;
-      
-      if (!items || items.length === 0) {
-        window.location.replace("https://www.flickr.com/photos/185082625@N02/");
-        return;
+    (async function() {
+      const apiKey = "8f55184af0567074bc4fff8e78c66f7f"; // <-- Paste your Flickr API key here
+      const userId = "185082625@N02";
+      const perPage = 250;
+      const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
+
+      try {
+        // Step 1: Ask Flickr for page 1 to find out the total pages in your 5,000+ photo archive
+        const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1`;
+        
+        const initialRes = await fetch(initialUrl);
+        const initialData = await initialRes.json();
+
+        if (initialData.stat !== "ok" || !initialData.photos || initialData.photos.total == 0) {
+          window.location.replace(defaultProfile);
+          return;
+        }
+
+        const totalPages = initialData.photos.pages;
+
+        // Step 2: Pick a completely random page from anywhere in your archive history
+        const randomPage = Math.floor(Math.random() * totalPages) + 1;
+
+        let photos = initialData.photos.photo;
+        
+        // If it picked a page other than page 1, fetch that specific random page
+        if (randomPage > 1) {
+          const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1`;
+          const pageRes = await fetch(randomPageUrl);
+          const pageData = await pageRes.json();
+          if (pageData.stat === "ok" && pageData.photos && pageData.photos.photo.length > 0) {
+            photos = pageData.photos.photo;
+          }
+        }
+
+        // Step 3: Pick a random photo from that page's batch
+        const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
+        const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
+
+        // Step 4: Redirect instantly
+        document.getElementById('fallback-link').href = photoUrl;
+        window.location.replace(photoUrl);
+
+      } catch (err) {
+        console.error("Error fetching random photo:", err);
+        window.location.replace(defaultProfile);
       }
-
-      var randomPhoto = items[Math.floor(Math.random() * items.length)];
-      var photoUrl = randomPhoto.link;
-
-      document.getElementById('fallback-link').href = photoUrl;
-      window.location.replace(photoUrl);
-    };
+    })();
   </script>
-
-  <script type="text/javascript" src="https://api.flickr.com/services/feeds/photos_public.gne?id=185082625@N02&format=json"></script>
 </body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shuffling Photo Archive...</title>
-  <style>
-    html, body {
-      background-color: #0d0d0d !important;
-      color: #aeaeae !important;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    a {
-      color: #ffffff !important;
-      margin-top: 15px;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div id="splash">[ SHUFFLING PHOTO ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
-
-  <script type="text/javascript">
-    // This function automatically receives the data straight from Flickr
-    window.jsonFlickrFeed = function(data) {
-      var items = data.items;
-      
-      if (!items || items.length === 0) {
-        window.location.replace("https://www.flickr.com/photos/185082625@N02/");
-        return;
-      }
-
-      // Pick a random photo from the feed batch
-      var randomPhoto = items[Math.floor(Math.random() * items.length)];
-      var photoUrl = randomPhoto.link;
-
-      // Update fallback link and redirect
-      document.getElementById('fallback-link').href = photoUrl;
-      window.location.replace(photoUrl);
-    };
-  </script>
-
-  <!-- This script requests your live public feed from Flickr -->
-  <script type="text/javascript" src="https://api.flickr.com/services/feeds/photos_public.gne?id=185082625@N02&format=json"></script>
-</body>
-</html>// Paste this into your browser console while on your Flickr page to grab all photo links
-var links = Array.from(document.querySelectorAll('a.overlay'))
-  .map(el => '"' + el.href + '",')
-  .join('\n');
-console.log(links);
+</html>
