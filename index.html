@@ -31,27 +31,16 @@
 
   <script type="text/javascript">
     (function() {
-      // Your complete archive link pool. Add as many photo URLs here as you like 
-      // spanning your oldest to newest uploads for a true deep archive shuffle.
-      var archiveUrls = [
-        "https://www.flickr.com/photos/185082625%40N02/53000000000/", // Example URL 1
-        "https://www.flickr.com/photos/185082625%40N02/53000000001/", // Example URL 2
-        "https://www.flickr.com/photos/185082625%40N02/53000000002/"  // Example URL 3
-        // Add more archive links here...
-      ];
+      // Set 'maxPage' to the highest page number of your photostream 
+      // (You can change this number depending on how deep your archive goes!)
+      var maxPage = 20; 
+      var randomPage = Math.floor(Math.random() * maxPage) + 1;
+      
+      // Direct photostream pagination — zero search tokens, zero keyword filtering
+      var destination = "https://www.flickr.com/photos/185082625%40N02/page" + randomPage + "/";
 
-      // Fallback to main photostream if the array is empty
-      if (!archiveUrls || archiveUrls.length === 0) {
-        window.location.replace("https://www.flickr.com/photos/185082625%40N02/");
-        return;
-      }
-
-      // Pick a completely random photo URL from your full archive array
-      var randomDestination = archiveUrls[Math.floor(Math.random() * archiveUrls.length)];
-
-      // Map to fallback link and execute instant redirect
-      document.getElementById('fallback-link').href = randomDestination;
-      window.location.replace(randomDestination);
+      document.getElementById('fallback-link').href = destination;
+      window.location.replace(destination);
     })();
   </script>
 </body>
