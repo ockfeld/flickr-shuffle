@@ -3,131 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ockfeld photo archive // shuffle</title>
+  <title>ockfeld archive // photo shuffle</title>
   <style>
-    /* Clean zero-radius industrial design language */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
+    /* Silent, minimal dark canvas during the micro-second load */
+    html, body {
       background-color: #0d0d0d;
-      color: #aeaeae;
+      color: #333333;
       font-family: "Courier New", Courier, monospace;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 1px;
+      height: 100%;
+      margin: 0;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .archive-card {
-      max-width: 440px;
-      width: 100%;
-      border: 1px solid #222222;
-      background-color: #0d0d0d;
-      padding: 32px 24px;
-      text-align: center;
-    }
-    .archive-header {
-      color: #555555;
-      font-size: 11px;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-      letter-spacing: 2px;
-    }
-    .shuffle-btn-link {
-      background-color: #0d0d0d;
-      color: #aeaeae;
-      border: 1px solid #222222;
-      padding: 12px 18px;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      text-decoration: none;
-      text-align: center;
-      cursor: pointer;
-      border-radius: 0px;
-      width: 100%;
-      box-sizing: border-box;
-      display: block;
-      transition: all 0.15s ease-in-out;
-    }
-    .shuffle-btn-link:hover {
-      background-color: #161616;
-      color: #ffffff;
-      border-color: #444444;
-      text-decoration: none;
-    }
-    .meta-footer {
-      color: #333333;
-      font-size: 10px;
-      margin-top: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
   </style>
-</head>
-<body>
-
-  <div class="archive-card">
-    <div class="archive-header">// ockfeld archive portal</div>
-
-    <a class="shuffle-btn-link" href="https://www.flickr.com/photos/185082625@N02/" id="ockfeld-archive-shuffle">
-      🎲 shuffle photo archive
-    </a>
-
-    <div class="meta-footer">high-entropy token randomization engine</div>
-  </div>
 
   <script type="text/javascript">
-  (function() {
-      // Cleaned token pool tailored to your camera prefixes, Swedish metadata, and accented characters
+    (function() {
+      // The exact high-coverage token pool from your proven Blogger gadget
       var searchTokens = [
-          // Camera & File Prefixes (Focusing on PXXXXXX sequences)
-          "p", "img", "dsc", "dcim", "dscn", "pict",
-          // Swedish Accented Characters
-          "å", "ä", "ö",
-          // General media terms
-          "film", "det",
-          // Vowels & single characters
-          "a", "e", "i", "o", "u",
-          // Symbols & Separators
-          "_",
-          // Single-digit numbers only (zero-free)
-          "1", "2", "3", "4", "5", "6", "7", "8", "9"
+        // Camera & File Prefixes (Focusing on PXXXXXX sequences)
+        "p", "img", "dsc", "dcim", "dscn", "pict",
+        // Swedish Accented Characters
+        "å", "ä", "ö",
+        // General media terms
+        "film", "det",
+        // Vowels & single characters
+        "a", "e", "i", "o", "u",
+        // Symbols & Separators
+        "_",
+        // Single-digit numbers only (zero-free)
+        "1", "2", "3", "4", "5", "6", "7", "8", "9"
       ];
 
-      function getShuffleURL() {
-          var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
-          var randomSeed = Math.floor(Math.random() * 9999999);
-          
-          return "https://www.flickr.com/search/?" +
-              "user_id=185082625%40N02" +
-              "&text=" + encodeURIComponent(randomToken) +
-              "&sort=interestingness-desc" +
-              "&page=1" +
-              "&view_all=1" +
-              "&_s=" + randomSeed;
-      }
+      // Pick random token
+      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      
+      // High-entropy cache-busting seed
+      var randomSeed = Math.floor(Math.random() * 9999999);
 
-      var btn = document.getElementById('ockfeld-archive-shuffle');
-      if (btn) {
-          btn.onclick = function(e) {
-              e.preventDefault();
-              window.location.href = getShuffleURL();
-          };
-      }
+      // Construct error-free search URL
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&text=" + encodeURIComponent(randomToken) +
+        "&sort=interestingness-desc" +
+        "&page=1" +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
 
-      // OPTIONAL AUTO-REDIRECT:
-      // Uncomment the line below if you want the page to bounce immediately on load without waiting for a click.
-      // window.location.href = getShuffleURL();
-  })();
+      // Execute immediate browser-native redirect (0ms delay)
+      window.location.replace(destination);
+    })();
   </script>
-
+</head>
+<body>
+  <div>[ SHUFFLING ARCHIVE... ]</div>
 </body>
 </html>
