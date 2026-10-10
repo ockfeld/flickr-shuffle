@@ -27,30 +27,31 @@
 </head>
 <body>
   <div id="splash">[ SHUFFLING PHOTO ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
+  <a id="fallback-link" href="https://www.flickr.com/photos/185082625%40N02/">Click here if you are not redirected automatically.</a>
 
   <script type="text/javascript">
-    // Flickr calls this global function name when loading the public feed json format
-    function jsonFlickrFeed(data) {
-      if (data && data.items && data.items.length > 0) {
-        // Pick a completely random photo object from the feed items
-        var randomItem = data.items[Math.floor(Math.random() * data.items.length)];
-        // The feed returns the individual photo page URL in item.link
-        var destination = randomItem.link;
-        
-        document.getElementById('fallback-link').href = destination;
-        window.location.replace(destination);
-      } else {
-        // Fallback to main photostream if feed is empty
-        window.location.replace("https://www.flickr.com/photos/185082625@N02/");
-      }
-    }
-
     (function() {
-      // Fetch your public feed dynamically using JSONP to bypass CORS restrictions
-      var script = document.createElement('script');
-      script.src = "https://api.flickr.com/services/feeds/photos_public.gne?id=185082625@N02&format=json";
-      document.head.appendChild(script);
+      // Your complete archive link pool. Add as many photo URLs here as you like 
+      // spanning your oldest to newest uploads for a true deep archive shuffle.
+      var archiveUrls = [
+        "https://www.flickr.com/photos/185082625%40N02/53000000000/", // Example URL 1
+        "https://www.flickr.com/photos/185082625%40N02/53000000001/", // Example URL 2
+        "https://www.flickr.com/photos/185082625%40N02/53000000002/"  // Example URL 3
+        // Add more archive links here...
+      ];
+
+      // Fallback to main photostream if the array is empty
+      if (!archiveUrls || archiveUrls.length === 0) {
+        window.location.replace("https://www.flickr.com/photos/185082625%40N02/");
+        return;
+      }
+
+      // Pick a completely random photo URL from your full archive array
+      var randomDestination = archiveUrls[Math.floor(Math.random() * archiveUrls.length)];
+
+      // Map to fallback link and execute instant redirect
+      document.getElementById('fallback-link').href = randomDestination;
+      window.location.replace(randomDestination);
     })();
   </script>
 </body>
