@@ -20,33 +20,36 @@
       text-align: center;
       padding: 20px;
     }
-    #error-box {
-      color: #ff5555;
-      margin-top: 20px;
+    #status {
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    #details {
+      color: #55ff55;
       max-width: 600px;
       word-break: break-all;
-    }
-    a {
-      color: #ffffff !important;
-      margin-top: 15px;
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div id="splash">[ CONNECTING TO FLICKR API... ]</div>
-  <div id="error-box"></div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/" style="display:none;">Click here to go to your profile manually.</a>
+  <div id="status">[ STATUS: INITIALIZING SCRIPT... ]</div>
+  <div id="details"></div>
 
   <script type="text/javascript">
     (async function() {
-      const apiKey = "Y8f55184af0567074bc4fff8e78c66f7f"; // <-- Paste your API key here
+      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Paste your API key here
       const userId = "185082625@N02";
       const perPage = 250;
+      const statusEl = document.getElementById('status');
+      const detailsEl = document.getElementById('details');
 
       try {
-        // Step 1: Request page 1 to get total photo count
-        const url = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1`;
+        // Unique timestamp to force bypass of all caches
+        const cacheBuster = "&_t=" + Date.now();
+
+        statusEl.innerText = "[ STATUS: CONNECTING TO FLICKR API... ]";
+        
+        const url = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1${cacheBuster}`;
         
         const res = await fetch(url);
         const data = await res.json();
@@ -58,13 +61,14 @@
         const totalPages = data.photos.pages;
         const totalPhotos = data.photos.total;
 
-        document.getElementById('splash').innerText = `[ ARCHIVE LOADED: ${totalPhotos} PHOTOS (${totalPages} PAGES) ]`;
+        statusEl.innerText = `[ STATUS: ARCHIVE FOUND (${totalPhotos} PHOTOS / ${totalPages} PAGES) ]`;
 
-        // Step 2: Pick a truly random page across the entire archive history
+        // Pick a truly random page across the entire archive history
         const randomPage = Math.floor(Math.random() * totalPages) + 1;
+        detailsEl.innerText = `Selected random page ${randomPage} out of ${totalPages}. Fetching...`;
 
-        // Step 3: Fetch that random page
-        const pageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1`;
+        // Fetch that specific random page
+        const pageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1${cacheBuster}`;
         
         const pageRes = await fetch(pageUrl);
         const pageData = await pageRes.json();
@@ -77,15 +81,19 @@
         const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
         const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
 
-        // Step 4: Success! Redirect to the deep archive photo
-        document.getElementById('splash').innerText = `[ REDIRECTING TO DEEP ARCHIVE... ]`;
-        window.location.replace(photoUrl);
+        statusEl.innerText = `[ STATUS: SUCCESS! REDIRECTING... ]`;
+        detailsEl.innerText = `Target Photo ID: ${randomPhoto.id} (Page ${randomPage})`;
+
+        // Small delay so you can see it worked before jumping
+        setTimeout(function() {
+          window.location.replace(photoUrl);
+        }, 800);
 
       } catch (err) {
         console.error(err);
-        document.getElementById('splash').innerText = "[ ERROR DETECTED ]";
-        document.getElementById('error-box').innerText = err.message;
-        document.getElementById('fallback-link').style.display = 'block';
+        statusEl.innerText = "[ STATUS: ERROR ENCOUNTERED ]";
+        detailsEl.style.color = "#ff5555";
+        detailsEl.innerText = err.message;
       }
     })();
   </script>
