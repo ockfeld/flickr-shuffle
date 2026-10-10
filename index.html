@@ -31,13 +31,18 @@
 
   <script type="text/javascript">
     (function() {
-      // Set 'maxPage' to the highest page number of your photostream 
-      // (You can change this number depending on how deep your archive goes!)
-      var maxPage = 20; 
-      var randomPage = Math.floor(Math.random() * maxPage) + 1;
+      // Define your archive's active year span (adjust start year as needed)
+      var startYear = 2020;
+      var endYear = 2026;
       
-      // Direct photostream pagination — zero search tokens, zero keyword filtering
-      var destination = "https://www.flickr.com/photos/185082625%40N02/page" + randomPage + "/";
+      var randomYear = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
+      var randomMonth = Math.floor(Math.random() * 12) + 1;
+      
+      // Ensure month is two digits (e.g., '03' instead of '3')
+      var monthStr = randomMonth < 10 ? '0' + randomMonth : '' + randomMonth;
+      
+      // Target Flickr's date-taken archive structure for a deep historical slice
+      var destination = "https://www.flickr.com/photos/185082625%40N02/archives/date-taken/" + randomYear + "/" + monthStr + "/";
 
       document.getElementById('fallback-link').href = destination;
       window.location.replace(destination);
