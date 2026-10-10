@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shuffling Photo Archive...</title>
+  <title>Flickr Archive Shuffler</title>
   <style>
     html, body {
       background-color: #0d0d0d !important;
@@ -17,6 +17,14 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+    #error-box {
+      color: #ff5555;
+      margin-top: 20px;
+      max-width: 600px;
+      word-break: break-all;
     }
     a {
       color: #ffffff !important;
@@ -26,399 +34,58 @@
   </style>
 </head>
 <body>
-  <div id="splash">[ SHUFFLING ENTIRE ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
+  <div id="splash">[ CONNECTING TO FLICKR API... ]</div>
+  <div id="error-box"></div>
+  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/" style="display:none;">Click here to go to your profile manually.</a>
 
   <script type="text/javascript">
     (async function() {
-      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Paste your API key here
-      const userId = "185082625@N02";
-      const perPage = 250; // Max batch size per page
-      const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
-
-      try {
-        // Unique cache buster so GitHub/browsers never serve cached responses
-        const cacheBuster = "&_t=" + Date.now() + Math.random();
-
-        // Step 1: Fetch page 1 of your complete public photostream to get exact total pages
-        const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const initialRes = await fetch(initialUrl);
-        const initialData = await initialRes.json();
-
-        if (initialData.stat !== "ok" || !initialData.photos || initialData.photos.total == 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const totalPages = initialData.photos.pages;
-
-        // Step 2: Pick a completely random page anywhere from page 1 (newest) to the absolute last page (oldest)
-        const randomPage = Math.floor(Math.random() * totalPages) + 1;
-
-        // Step 3: Fetch that specific random page from your deep history
-        const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const pageRes = await fetch(randomPageUrl);
-        const pageData = await pageRes.json();
-
-        if (pageData.stat !== "ok" || !pageData.photos || pageData.photos.photo.length === 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const photos = pageData.photos.photo;
-
-        // Step 4: Pick a random photo from that page's batch
-        const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
-        const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
-
-        // Step 5: Redirect instantly
-        document.getElementById('fallback-link').href = photoUrl;
-        window.location.replace(photoUrl);
-
-      } catch (err) {
-        console.error("Error fetching random photo:", err);
-        window.location.replace(defaultProfile);
-      }
-    })();
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shuffling Photo Archive...</title>
-  <style>
-    html, body {
-      background-color: #0d0d0d !important;
-      color: #aeaeae !important;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    a {
-      color: #ffffff !important;
-      margin-top: 15px;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div id="splash">[ SHUFFLING ENTIRE ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
-
-  <script type="text/javascript">
-    (async function() {
-      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Paste your API key here
+      const apiKey = "Y8f55184af0567074bc4fff8e78c66f7f"; // <-- Paste your API key here
       const userId = "185082625@N02";
       const perPage = 250;
-      const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
 
       try {
-        const cacheBuster = "&_t=" + new Date().getTime();
-
-        // Step 1: Search with sort=date-posted-asc so pages span chronologically from oldest to newest
-        const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&user_id=${userId}&sort=date-posted-asc&per_page=${perPage}&page=1&format=json&nojsoncallback=1${cacheBuster}`;
+        // Step 1: Request page 1 to get total photo count
+        const url = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1`;
         
-        const initialRes = await fetch(initialUrl);
-        const initialData = await initialRes.json();
+        const res = await fetch(url);
+        const data = await res.json();
 
-        if (initialData.stat !== "ok" || !initialData.photos || initialData.photos.total == 0) {
-          window.location.replace(defaultProfile);
-          return;
+        if (data.stat !== "ok") {
+          throw new Error("Flickr API Error: " + (data.message || JSON.stringify(data)));
         }
 
-        const totalPages = initialData.photos.pages;
+        const totalPages = data.photos.pages;
+        const totalPhotos = data.photos.total;
 
-        // Step 2: Pick a completely random page anywhere across your entire chronological archive
+        document.getElementById('splash').innerText = `[ ARCHIVE LOADED: ${totalPhotos} PHOTOS (${totalPages} PAGES) ]`;
+
+        // Step 2: Pick a truly random page across the entire archive history
         const randomPage = Math.floor(Math.random() * totalPages) + 1;
 
-        // Step 3: Fetch that specific random page using the same chronological sorting
-        const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&user_id=${userId}&sort=date-posted-asc&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1${cacheBuster}`;
+        // Step 3: Fetch that random page
+        const pageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1`;
         
-        const pageRes = await fetch(randomPageUrl);
+        const pageRes = await fetch(pageUrl);
         const pageData = await pageRes.json();
 
-        if (pageData.stat !== "ok" || !pageData.photos || pageData.photos.photo.length === 0) {
-          window.location.replace(defaultProfile);
-          return;
+        if (pageData.stat !== "ok" || !pageData.photos.photo.length) {
+          throw new Error("Failed to fetch photos from random page " + randomPage);
         }
 
         const photos = pageData.photos.photo;
-
-        // Step 4: Pick a random photo from that page's batch
         const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
         const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
 
-        // Step 5: Redirect instantly
-        document.getElementById('fallback-link').href = photoUrl;
+        // Step 4: Success! Redirect to the deep archive photo
+        document.getElementById('splash').innerText = `[ REDIRECTING TO DEEP ARCHIVE... ]`;
         window.location.replace(photoUrl);
 
       } catch (err) {
-        console.error("Error fetching random photo:", err);
-        window.location.replace(defaultProfile);
-      }
-    })();
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shuffling Photo Archive...</title>
-  <style>
-    html, body {
-      background-color: #0d0d0d !important;
-      color: #aeaeae !important;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    a {
-      color: #ffffff !important;
-      margin-top: 15px;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div id="splash">[ SHUFFLING ENTIRE ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
-
-  <script type="text/javascript">
-    (async function() {
-      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Paste your API key here
-      const userId = "185082625@N02";
-      const perPage = 250;
-      const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
-
-      try {
-        const cacheBuster = "&_t=" + new Date().getTime();
-
-        // Step 1: Query photo search to unlock full historical access across all pages
-        const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const initialRes = await fetch(initialUrl);
-        const initialData = await initialRes.json();
-
-        if (initialData.stat !== "ok" || !initialData.photos || initialData.photos.total == 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const totalPages = initialData.photos.pages;
-
-        // Step 2: Pick a completely random page from your entire archive's depth
-        const randomPage = Math.floor(Math.random() * totalPages) + 1;
-
-        // Step 3: Fetch that specific random deep page
-        const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const pageRes = await fetch(randomPageUrl);
-        const pageData = await pageRes.json();
-
-        if (pageData.stat !== "ok" || !pageData.photos || pageData.photos.photo.length === 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const photos = pageData.photos.photo;
-
-        // Step 4: Pick a random photo from that page
-        const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
-        const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
-
-        // Step 5: Redirect instantly
-        document.getElementById('fallback-link').href = photoUrl;
-        window.location.replace(photoUrl);
-
-      } catch (err) {
-        console.error("Error fetching random photo:", err);
-        window.location.replace(defaultProfile);
-      }
-    })();
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shuffling Photo Archive...</title>
-  <style>
-    html, body {
-      background-color: #0d0d0d !important;
-      color: #aeaeae !important;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    a {
-      color: #ffffff !important;
-      margin-top: 15px;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div id="splash">[ SHUFFLING ENTIRE ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
-
-  <script type="text/javascript">
-    (async function() {
-      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Paste your API key here
-      const userId = "185082625@N02";
-      const perPage = 100;
-      const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
-
-      try {
-        // Add a cache-buster timestamp so the browser never serves an old API response
-        const cacheBuster = "&_t=" + new Date().getTime();
-
-        // Step 1: Get total count and pages
-        const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const initialRes = await fetch(initialUrl);
-        const initialData = await initialRes.json();
-
-        if (initialData.stat !== "ok" || !initialData.photos || initialData.photos.total == 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const totalPages = initialData.photos.pages;
-
-        // Step 2: Pick a completely random page from 1 up to the absolute last page of your 5,000+ archive
-        const randomPage = Math.floor(Math.random() * totalPages) + 1;
-
-        // Step 3: Fetch that specific random deep page
-        const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const pageRes = await fetch(randomPageUrl);
-        const pageData = await pageRes.json();
-
-        if (pageData.stat !== "ok" || !pageData.photos || pageData.photos.photo.length === 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const photos = pageData.photos.photo;
-
-        // Step 4: Pick a random photo from that page
-        const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
-        const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
-
-        // Step 5: Redirect instantly
-        document.getElementById('fallback-link').href = photoUrl;
-        window.location.replace(photoUrl);
-
-      } catch (err) {
-        console.error("Error fetching random photo:", err);
-        window.location.replace(defaultProfile);
-      }
-    })();
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shuffling Photo Archive...</title>
-  <style>
-    html, body {
-      background-color: #0d0d0d !important;
-      color: #aeaeae !important;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    a {
-      color: #ffffff !important;
-      margin-top: 15px;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <div id="splash">[ SHUFFLING ENTIRE ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
-
-  <script type="text/javascript">
-    (async function() {
-      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Your API key stays here
-      const userId = "185082625@N02";
-      const perPage = 100; // Smaller batch size per page for safety
-      const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
-
-      try {
-        // Step 1: Fetch page 1 to get the absolute total count of your photos and pages
-        const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1`;
-        
-        const initialRes = await fetch(initialUrl);
-        const initialData = await initialRes.json();
-
-        if (initialData.stat !== "ok" || !initialData.photos || initialData.photos.total == 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const totalPages = initialData.photos.pages;
-
-        // Step 2: Pick a completely random page anywhere from page 1 to the very last page of your archive
-        const randomPage = Math.floor(Math.random() * totalPages) + 1;
-
-        // Step 3: Fetch that specific random page
-        const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1`;
-        
-        const pageRes = await fetch(randomPageUrl);
-        const pageData = await pageRes.json();
-
-        if (pageData.stat !== "ok" || !pageData.photos || pageData.photos.photo.length === 0) {
-          window.location.replace(defaultProfile);
-          return;
-        }
-
-        const photos = pageData.photos.photo;
-
-        // Step 4: Pick a random photo from that random page's batch
-        const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
-        const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
-
-        // Step 5: Redirect instantly to the deep archive photo
-        document.getElementById('fallback-link').href = photoUrl;
-        window.location.replace(photoUrl);
-
-      } catch (err) {
-        console.error("Error fetching random photo:", err);
-        window.location.replace(defaultProfile);
+        console.error(err);
+        document.getElementById('splash').innerText = "[ ERROR DETECTED ]";
+        document.getElementById('error-box').innerText = err.message;
+        document.getElementById('fallback-link').style.display = 'block';
       }
     })();
   </script>
