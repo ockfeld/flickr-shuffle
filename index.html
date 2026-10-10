@@ -30,31 +30,26 @@
   <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
 
   <script type="text/javascript">
-    (function() {
-      // Your archive URL pool
-      var archiveUrls = [
-        "https://www.flickr.com/photos/185082625@N02/53000000000/", 
-        "https://www.flickr.com/photos/185082625@N02/52000000000/", 
-        "https://www.flickr.com/photos/185082625@N02/51000000000/"
-      ];
-
-      var defaultProfile = "https://www.flickr.com/photos/185082625@N02/";
-
-      if (!archiveUrls || archiveUrls.length === 0) {
-        window.location.replace(defaultProfile);
+    // This function catches the data coming directly from Flickr's public stream
+    function jsonFlickrFeed(data) {
+      var items = data.items;
+      
+      if (!items || items.length === 0) {
+        window.location.replace("https://www.flickr.com/photos/185082625@N02/");
         return;
       }
 
-      var randomDestination = archiveUrls[Math.floor(Math.random() * archiveUrls.length)];
+      // Pick a completely random photo from your latest public uploads
+      var randomPhoto = items[Math.floor(Math.random() * items.length)];
+      var photoUrl = randomPhoto.link;
 
-      document.getElementById('fallback-link').href = randomDestination;
-
-      // Optional: Uncomment the setTimeout below if you want a 400ms delay 
-      // so the retro splash text is visible for a split second before redirecting.
-      // setTimeout(function() {
-        window.location.replace(randomDestination);
-      // }, 400);
-    })();
+      // Update the fallback link and redirect instantly
+      document.getElementById('fallback-link').href = photoUrl;
+      window.location.replace(photoUrl);
+    }
   </script>
+
+  <!-- This script tag pulls your live public photos and triggers the function above -->
+  <script type="text/javascript" src="https://api.flickr.com/services/feeds/photos_public.gne?id=185082625@N02&format=json"></script>
 </body>
 </html>
