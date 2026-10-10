@@ -50,10 +50,11 @@
         btn.onclick = function(e) {
           e.preventDefault();
           
-          // Cleaned token pool without dcim, film, det, or dead-end digits
+          // Token pool including camera prefixes, vowels, and single digits
           var searchTokens = [
             "p", "pict", "img", "dsc", "dscn",
-            "a", "e", "i", "o", "u"
+            "a", "e", "i", "o", "u",
+            "1", "2", "3", "4", "5", "6", "7", "8", "9"
           ];
           
           var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
