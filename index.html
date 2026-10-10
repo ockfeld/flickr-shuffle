@@ -28,6 +28,7 @@
 </head>
 <body>
   <div>[ SHUFFLING PHOTO ARCHIVE... ]</div>
+  <div id="fallback"></div>
 
   <script type="text/javascript">
     (function() {
@@ -52,8 +53,8 @@
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      // Fallback link in case redirect is delayed or blocked
-      document.write('<a href="' + destination + '">Click here if you are not redirected automatically.</a>');
+      // Populate fallback link safely without wiping the DOM
+      document.getElementById('fallback').innerHTML = '<a href="' + destination + '">Click here if you are not redirected automatically.</a>';
 
       // Wait 1.5 seconds before redirecting so the splash screen is readable
       setTimeout(function() {
