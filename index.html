@@ -34,15 +34,14 @@
 
   <script type="text/javascript">
     (function() {
-      // Strictly the working camera tokens — removed 'p', 'dscn', vowels, and digits
+      // Balanced active token pool including pict, img, dsc, and dscn
       var searchTokens = [
-        "pict", "img", "dsc"
+        "pict", "img", "dsc", "dscn"
       ];
       
       var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
       var randomSeed = Math.floor(Math.random() * 9999999);
       
-      // Removed '&page=' parameter so Flickr's native infinite scroll won't break or hang
       var destination = "https://www.flickr.com/search/?" +
         "user_id=185082625%40N02" +
         "&text=" + encodeURIComponent(randomToken) +
