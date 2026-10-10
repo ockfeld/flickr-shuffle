@@ -54,10 +54,10 @@
       // Instantly map destination to the static link
       document.getElementById('fallback-link').href = destination;
 
-      // Blazing fast 10ms redirect
+      // Zero-delay asynchronous redirect
       setTimeout(function() {
         window.location.replace(destination);
-      }, 10);
+      }, 0);
     })();
   </script>
 </body>
