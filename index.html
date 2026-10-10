@@ -3,6 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ockfeld photo archive // shuffle</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    html, body {
+      background-color: #0d0d0d !important;
+      color: #aeaeae;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .splash-card {
+      border: 1px solid #222222;
+      background-color: #0d0d0d;
+      padding: 32px 48px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .text-main {
+      color: #ffffff;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .text-sub {
+      color: #444444;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+  </style>
+
+  <script type="text/javascript">
+    (function() {
+      // Cleaned token pool focusing on active filename prefixes & tags across your photostream
+      var searchTokens = [
+        "dsc", "img", "dcim", "dscn", "pict", "p", 
+        "film", "det", "å", "ä", "ö",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9"
+      ];
+
+      var sortModes = [
+        "interestingness-desc",
+        "date-posted-asc",
+        "date-posted-desc"
+      ];
+
+      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
+      
+      // Page 1 to 5 range keeps token search bounds valid and populated with photos
+      var randomPage = Math.floor(Math.random() * 5) + 1; 
+      var randomSeed = Math.floor(Math.random() * 9999999);
+
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&text=" + encodeURIComponent(randomToken) +
+        "&sort=" + randomSort +
+        "&page=" + randomPage +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
+
+      window.location.replace(destination);
+    })();
+  </script>
+</head>
+<body>
+
+  <div class="splash-card">
+    <div class="text-main">[ PULLING ARCHIVE PHOTO... ]</div>
+    <div class="text-sub">ockfeld portal // zero-radius redirect</div>
+  </div>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en" style="background-color: #0d0d0d !important; color-scheme: dark;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ockfeld archive // deep shuffle v6</title>
   <style>
     :root {
