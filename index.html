@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ockfeld archive // deep shuffle v5</title>
+  <title>ockfeld archive // deep shuffle v6</title>
   <style>
     :root {
       color-scheme: dark;
@@ -47,23 +47,14 @@
 </head>
 <body>
 
-  <!-- v5-clean-single-render -->
   <div class="splash-card">
     <div class="text-main">[ PULLING ARCHIVE PHOTO... ]</div>
-    <div class="text-sub">ockfeld portal // deep-stream index</div>
+    <div class="text-sub">ockfeld portal // full-stream sweep</div>
   </div>
 
   <script type="text/javascript">
     (function() {
-      // Broad token array
-      var searchTokens = [
-        "p", "img", "dsc", "dcim", "dscn", "pict", "jpg", "jpeg",
-        "å", "ä", "ö", "film", "det", "och", "en",
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
-        "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-        "_", "-", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
-      ];
-
+      // Rotate sort vectors to pull from oldest archive items, recent uploads, and top highlights
       var sortModes = [
         "interestingness-desc",
         "date-posted-asc",
@@ -71,112 +62,21 @@
         "relevance"
       ];
 
-      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
       var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
       
-      // Safe pagination range (1 to 45) so pages actually exist and don't fallback to page 1
-      var randomPage = Math.floor(Math.random() * 45) + 1; 
+      // Safe deep pagination range (1 to 100) spanning your entire 5000+ photo stream 
+      // without exceeding result boundaries or causing empty pages.
+      var randomPage = Math.floor(Math.random() * 100) + 1; 
       var randomSeed = Math.floor(Math.random() * 999999999);
 
+      // Query the full stream directly without restrictive text bottlenecks
       var destination = "https://www.flickr.com/search/?" +
         "user_id=185082625%40N02" +
-        "&text=" + encodeURIComponent(randomToken) +
         "&sort=" + randomSort +
         "&page=" + randomPage +
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      requestAnimationFrame(function() {
-        window.location.replace(destination);
-      });
-    })();
-  </script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ockfeld archive // random photo portal</title>
-  <style>
-    /* Force dark background at root to prevent white flash */
-    html, body {
-      background-color: #0d0d0d !important;
-      color-scheme: dark;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Courier New", Courier, monospace;
-    }
-    .splash-box {
-      border: 1px solid #222222;
-      background-color: #0d0d0d;
-      padding: 32px 48px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-    .text-main {
-      color: #ffffff;
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .text-sub {
-      color: #444444;
-      font-size: 10px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="splash-box">
-    <div class="text-main">[ PULLING RANDOM ARCHIVE PHOTO... ]</div>
-    <div class="text-sub">ockfeld portal // 5000+ index sweep</div>
-  </div>
-
-  <script type="text/javascript">
-    (function() {
-      // Comprehensive token pool covering legacy camera prefixes, filenames, and character blocks
-      var searchTokens = [
-        "p", "img", "dsc", "dcim", "dscn", "pict", "jpg", "jpeg",
-        "å", "ä", "ö", "film", "det", "och", "en",
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
-        "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-        "_", "-", ".", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
-      ];
-
-      // Mixed sort vectors to break engagement bias and reach deep historical catalog items
-      var sortModes = [
-        "interestingness-desc",
-        "date-posted-asc",
-        "date-posted-desc",
-        "relevance"
-      ];
-
-      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
-      var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
-      
-      // Deep pagination sweep (pages 1 to 250) to traverse your entire 5000+ photo collection
-      var randomPage = Math.floor(Math.random() * 250) + 1; 
-      var randomSeed = Math.floor(Math.random() * 999999999);
-
-      var destination = "https://www.flickr.com/search/?" +
-        "user_id=185082625%40N02" +
-        "&text=" + encodeURIComponent(randomToken) +
-        "&sort=" + randomSort +
-        "&page=" + randomPage +
-        "&view_all=1" +
-        "&_s=" + randomSeed;
-
-      // Ensure single render frame before executing the jump
       requestAnimationFrame(function() {
         window.location.replace(destination);
       });
