@@ -29,10 +29,11 @@
 </head>
 <body>
   <div id="splash">[ SHUFFLING PHOTO ARCHIVE... ]</div>
+  <!-- Static fallback link avoids JS DOM creation delay -->
+  <a id="fallback-link" href="https://www.flickr.com/search/?user_id=185082625%40N02&sort=interestingness-desc&page=1&view_all=1">Click here if you are not redirected automatically.</a>
 
   <script type="text/javascript">
     (function() {
-      // Search tokens with img and p restored
       var searchTokens = [
         "film", "det", "pict", "img", "p",
         "å", "ä", "ö",
@@ -50,19 +51,13 @@
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      // Only create the fallback link if it doesn't already exist
-      if (!document.getElementById('fallback-link')) {
-        var link = document.createElement('a');
-        link.id = 'fallback-link';
-        link.href = destination;
-        link.innerText = "Click here if you are not redirected automatically.";
-        document.body.appendChild(link);
-      }
+      // Instantly map destination to the static link
+      document.getElementById('fallback-link').href = destination;
 
-      // Ultra-fast 150ms redirect
+      // Near-instant 50ms redirect
       setTimeout(function() {
         window.location.replace(destination);
-      }, 150);
+      }, 50);
     })();
   </script>
 </body>
