@@ -1,4 +1,90 @@
 <!DOCTYPE html>
+<html lang="en" style="background-color: #0d0d0d !important; color-scheme: dark;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ockfeld photo archive // shuffle</title>
+  <style>
+    /* Force dark color scheme at root level to kill default browser white canvas */
+    :root {
+      color-scheme: dark;
+    }
+    html, body {
+      background-color: #0d0d0d !important;
+      color: #aeaeae;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .splash-card {
+      max-width: 440px;
+      width: 90%;
+      border: 1px solid #222222;
+      background-color: #0d0d0d;
+      padding: 32px 24px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .status-text {
+      color: #ffffff;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .sub-text {
+      color: #444444;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="splash-card">
+    <div class="status-text">[ SHUFFLING PHOTO ARCHIVE... ]</div>
+    <div class="sub-text">ockfeld portal // zero-latency redirect</div>
+  </div>
+
+  <script type="text/javascript">
+    (function() {
+      // Proven high-coverage token pool
+      var searchTokens = [
+        "p", "img", "dsc", "dcim", "dscn", "pict",
+        "å", "ä", "ö", "film", "det",
+        "a", "e", "i", "o", "u", "_",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9"
+      ];
+
+      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      var randomSeed = Math.floor(Math.random() * 9999999);
+
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&text=" + encodeURIComponent(randomToken) +
+        "&sort=interestingness-desc" +
+        "&page=1" +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
+
+      // Wait 1 animation frame so browser renders dark splash card before bouncing
+      requestAnimationFrame(function() {
+        window.location.replace(destination);
+      });
+    })();
+  </script>
+
+</body>
+</html><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
