@@ -9,6 +9,108 @@
       background-color: #0d0d0d !important;
       color: #aeaeae !important;
       font-family: "Courier New", Courier, monospace;
+      font-size: 14px;
+      letter-spacing: 1px;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+    #status {
+      color: #55ff55;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="status">[ CONNECTING TO FLICKR... ]</div>
+
+  <script type="text/javascript">
+    const apiKey = "8f55184af0567074bc4fff8e78c66f7f"; // <-- Paste your API key here
+    const userId = "185082625@N02";
+    const perPage = 250;
+    const statusEl = document.getElementById('status');
+
+    let apiResolve = null;
+
+    // Flickr strictly requires this exact global callback name for JSONP
+    window.jsonFlickrApi = function(data) {
+      if (apiResolve) {
+        apiResolve(data);
+      }
+    };
+
+    function callFlickr(methodParams) {
+      return new Promise((resolve, reject) => {
+        apiResolve = resolve;
+        const script = document.createElement('script');
+        script.src = `https://api.flickr.com/services/rest/?api_key=${apiKey}&format=json&${methodParams}`;
+        script.onerror = () => reject(new Error("Network error loading Flickr script"));
+        document.body.appendChild(script);
+      });
+    }
+
+    (async function() {
+      try {
+        statusEl.innerText = "[ FETCHING ARCHIVE STATS... ]";
+        
+        // Step 1: Get total count and pages
+        const initialData = await callFlickr(`method=flickr.people.getPublicPhotos&user_id=${userId}&per_page=${perPage}&page=1`);
+
+        if (initialData.stat !== "ok") {
+          throw new Error("API Error: " + (initialData.message || JSON.stringify(initialData)));
+        }
+
+        const totalPages = initialData.photos.pages;
+        const totalPhotos = initialData.photos.total;
+
+        statusEl.innerText = `[ ARCHIVE LOADED: ${totalPhotos} PHOTOS (${totalPages} PAGES) ]`;
+
+        // Step 2: Pick a random page across your entire history
+        const randomPage = Math.floor(Math.random() * totalPages) + 1;
+        statusEl.innerText = `[ PULLING RANDOM PAGE ${randomPage} OF ${totalPages}... ]`;
+
+        // Step 3: Fetch that specific random page
+        const pageData = await callFlickr(`method=flickr.people.getPublicPhotos&user_id=${userId}&per_page=${perPage}&page=${randomPage}`);
+
+        if (pageData.stat !== "ok" || !pageData.photos.photo.length) {
+          throw new Error("Failed to load page " + randomPage);
+        }
+
+        const photos = pageData.photos.photo;
+        const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
+        const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
+
+        statusEl.innerText = "[ SUCCESS! REDIRECTING... ]";
+        
+        setTimeout(() => {
+          window.location.replace(photoUrl);
+        }, 600);
+
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = "[ ERROR: " + err.message + " ]";
+        statusEl.style.color = "#ff5555";
+      }
+    })();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flickr Archive Shuffler</title>
+  <style>
+    html, body {
+      background-color: #0d0d0d !important;
+      color: #aeaeae !important;
+      font-family: "Courier New", Courier, monospace;
       font-size: 13px;
       letter-spacing: 1px;
       height: 100vh;
