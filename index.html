@@ -34,21 +34,24 @@
 
   <script type="text/javascript">
     (function() {
-      // Pure camera prefixes only — no vowels, no digits, no symbols
+      // Pure camera prefixes pool
       var searchTokens = [
         "p", "pict", "img", "dsc", "dscn"
       ];
       
       var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      
+      // Randomize page between 1 and 8 to ensure true shuffling across your archive
+      var randomPage = Math.floor(Math.random() * 8) + 1;
+      
       var randomSeed = Math.floor(Math.random() * 9999999);
       
       var destination = "https://www.flickr.com/search/?" +
         "user_id=185082625%40N02" +
         "&text=" + encodeURIComponent(randomToken) +
         "&sort=interestingness-desc" +
-        "&page=1" +
+        "&page=" + randomPage +
         "&view_all=1" +
-        "&v=clean" +
         "&_s=" + randomSeed;
 
       // Instantly map destination to the static link
