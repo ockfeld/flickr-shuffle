@@ -54,15 +54,12 @@
 
   <script type="text/javascript">
     (function() {
-      // Lock sort modes to prevent default fallbacks
       var sortModes = [
         "interestingness-desc",
         "relevance"
       ];
 
       var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
-      
-      // Random page from 2 to 56 to cover your entire active archive range
       var randomPage = Math.floor(Math.random() * 55) + 2; 
       var randomSeed = Math.floor(Math.random() * 999999999);
 
@@ -73,9 +70,7 @@
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      requestAnimationFrame(function() {
-        window.location.replace(destination);
-      });
+      window.location.replace(destination);
     })();
   </script>
 
