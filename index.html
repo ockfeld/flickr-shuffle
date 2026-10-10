@@ -32,12 +32,10 @@
 
   <script type="text/javascript">
     (function() {
+      // Revised token pool with valid terms for your archive
       var searchTokens = [
-        "p", "img", "dsc", "dcim", "dscn", "pict",
+        "film", "det", "p", "img", "dsc", "pict",
         "å", "ä", "ö",
-        "film", "det",
-        "a", "e", "i", "o", "u",
-        "_",
         "1", "2", "3", "4", "5", "6", "7", "8", "9"
       ];
       
@@ -61,10 +59,10 @@
         document.body.appendChild(link);
       }
 
-      // Snappy 0.3 second redirect
+      // Ultra-fast 150ms redirect
       setTimeout(function() {
         window.location.replace(destination);
-      }, 300);
+      }, 150);
     })();
   </script>
 </body>
