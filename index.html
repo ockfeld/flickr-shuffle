@@ -52,16 +52,19 @@
         "&view_all=1" +
         "&_s=" + randomSeed;
 
-      // Append the fallback link safely via JS so there's only one line of text plus the link
-      var link = document.createElement('a');
-      link.href = destination;
-      link.innerText = "Click here if you are not redirected automatically.";
-      document.body.appendChild(link);
+      // Only create the fallback link if it doesn't already exist
+      if (!document.getElementById('fallback-link')) {
+        var link = document.createElement('a');
+        link.id = 'fallback-link';
+        link.href = destination;
+        link.innerText = "Click here if you are not redirected automatically.";
+        document.body.appendChild(link);
+      }
 
-      // Redirect after 1 second
+      // Snappy 0.3 second redirect
       setTimeout(function() {
         window.location.replace(destination);
-      }, 1000);
+      }, 300);
     })();
   </script>
 </body>
