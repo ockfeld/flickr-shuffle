@@ -34,10 +34,9 @@
 
   <script type="text/javascript">
     (function() {
-      // Clean token pool without digits or dead-end symbols
+      // Strict camera prefix pool only — no vowels, no digits, no symbols
       var searchTokens = [
-        "p", "pict", "img", "dsc", "dscn",
-        "a", "e", "i", "o", "u"
+        "p", "pict", "img", "dsc", "dscn"
       ];
       
       var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
