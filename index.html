@@ -31,34 +31,24 @@
 
   <script type="text/javascript">
     (function() {
-      // Define your archive's historical timeframe (adjust start year as needed)
-      var startYear = 2018;
-      var currentYear = 2026;
-      
-      // Pick a random year and month from your history
-      var randomYear = Math.floor(Math.random() * (currentYear - startYear + 1)) + startYear;
-      var randomMonth = Math.floor(Math.random() * 12) + 1;
-      var monthStr = randomMonth < 10 ? '0' + randomMonth : '' + randomMonth;
-      
-      // Calculate days in that specific month to construct accurate date bounds
-      var daysInMonth = new Date(randomYear, randomMonth, 0).getDate();
-      
-      // Format dates as YYYYMMDD for Flickr's server-side date range filter
-      var dateFrom = randomYear + monthStr + "01";
-      var dateTo = randomYear + monthStr + (daysInMonth < 10 ? '0' + daysInMonth : '' + daysInMonth);
-      
-      var randomSeed = Math.floor(Math.random() * 9999999);
-      
-      // Force Flickr's search engine to pull strictly from that random historical time window
-      var destination = "https://www.flickr.com/search/?" +
-        "user_id=185082625%40N02" +
-        "&d=taken-" + dateFrom + "-" + dateTo +
-        "&sort=interestingness-desc" +
-        "&view_all=1" +
-        "&_s=" + randomSeed;
+      // Paste your absolute archive link pool here. 
+      // Because this is local to your script, it bypasses Flickr completely and 
+      // guarantees a true, deep random pick across your entire history every single time.
+      var archiveUrls = [
+        "https://www.flickr.com/photos/185082625%40N02/53000000000/", // Replace with actual deep archive URLs
+        "https://www.flickr.com/photos/185082625%40N02/52000000000/", 
+        "https://www.flickr.com/photos/185082625%40N02/51000000000/"
+      ];
 
-      document.getElementById('fallback-link').href = destination;
-      window.location.replace(destination);
+      if (!archiveUrls || archiveUrls.length === 0) {
+        window.location.replace("https://www.flickr.com/photos/185082625%40N02/");
+        return;
+      }
+
+      var randomDestination = archiveUrls[Math.floor(Math.random() * archiveUrls.length)];
+
+      document.getElementById('fallback-link').href = randomDestination;
+      window.location.replace(randomDestination);
     })();
   </script>
 </body>
