@@ -3,17 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ockfeld photo archive // random photo</title>
+  <title>ockfeld archive // photo shuffle</title>
   <style>
-    /* Force dark background immediately to prevent any white flash */
-    html, body {
+    /* Prevent white flash by forcing background color at the highest priority before page load */
+    html {
+      background-color: #0d0d0d !important;
+      color-scheme: dark;
+    }
+    body {
       background-color: #0d0d0d !important;
       color: #aeaeae;
       font-family: "Courier New", Courier, monospace;
       font-size: 12px;
       letter-spacing: 1px;
-      height: 100%;
+      height: 100vh;
       margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -40,28 +45,6 @@
       letter-spacing: 1px;
     }
   </style>
-
-  <script type="text/javascript">
-    // Flickr Public Feed JSONP Callback
-    window.jsonFlickrFeed = function(data) {
-      if (data && data.items && data.items.length > 0) {
-        // Pick a random photo directly from your stream feed
-        var randomItem = data.items[Math.floor(Math.random() * data.items.length)];
-        // randomItem.link is the exact single photo page URL
-        window.location.replace(randomItem.link);
-      } else {
-        // Fallback to main photostream if feed fails
-        window.location.replace("https://www.flickr.com/photos/185082625@N02/");
-      }
-    };
-
-    // Load feed instantly on page initialization
-    (function() {
-      var script = document.createElement('script');
-      script.src = "https://www.flickr.com/services/feeds/photos_public.gne?id=185082625@N02&format=json";
-      document.head.appendChild(script);
-    })();
-  </script>
 </head>
 <body>
 
@@ -70,89 +53,27 @@
     <div class="sub-text">ockfeld archive // zero-radius portal</div>
   </div>
 
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ockfeld photo archive // shuffling...</title>
-  <style>
-    /* Minimal zero-radius dark splash screen */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      background-color: #0d0d0d;
-      color: #aeaeae;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 12px;
-      letter-spacing: 1px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .splash-card {
-      max-width: 440px;
-      width: 100%;
-      border: 1px solid #222222;
-      background-color: #0d0d0d;
-      padding: 32px 24px;
-      text-align: center;
-    }
-    .status-text {
-      color: #ffffff;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-    }
-    .sub-text {
-      color: #444444;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-  </style>
-
   <script type="text/javascript">
-    (function() {
-      // High-coverage token pool
-      var searchTokens = [
-        "p", "img", "dsc", "dcim", "dscn", "pict",
-        "å", "ä", "ö", "film", "det",
-        "a", "e", "i", "o", "u", "_",
-        "1", "2", "3", "4", "5", "6", "7", "8", "9"
-      ];
+    // JSONP callback for Flickr public feed
+    window.jsonFlickrFeed = function(data) {
+      if (data && data.items && data.items.length > 0) {
+        // Pick a random single photo directly from your stream feed
+        var randomItem = data.items[Math.floor(Math.random() * data.items.length)];
+        // Navigate straight to the single photo URL (e.g., /photos/185082625@N02/49588834758/)
+        window.location.replace(randomItem.link);
+      } else {
+        window.location.replace("https://www.flickr.com/photos/185082625@N02/");
+      }
+    };
 
-      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
-      var randomSeed = Math.floor(Math.random() * 9999999);
-
-      // Direct search query jump
-      var destination = "https://www.flickr.com/search/?" +
-        "user_id=185082625%40N02" +
-        "&text=" + encodeURIComponent(randomToken) +
-        "&sort=interestingness-desc" +
-        "&page=1" +
-        "&view_all=1" +
-        "&_s=" + randomSeed;
-
-      // Instant execution: replace current page history with zero hangtime
-      window.location.replace(destination);
-    })();
+    // Execute feed fetch after the DOM renders the dark splash screen
+    window.addEventListener("DOMContentLoaded", function() {
+      var script = document.createElement('script');
+      // Append timestamp cache-buster to force fresh photo feed on every single click
+      script.src = "https://www.flickr.com/services/feeds/photos_public.gne?id=185082625@N02&format=json&_cb=" + new Date().getTime();
+      document.head.appendChild(script);
+    });
   </script>
-</head>
-<body>
-
-  <div class="splash-card">
-    <div class="status-text">[ SHUFFLING PHOTO ARCHIVE... ]</div>
-    <div class="sub-text">ockfeld portal // zero-latency redirect</div>
-  </div>
 
 </body>
 </html>
