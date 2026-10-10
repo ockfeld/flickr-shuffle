@@ -31,13 +31,13 @@
 
   <script type="text/javascript">
     (async function() {
-      const apiKey = "8f55184af0567074bc4fff8e78c66f7f"; // <-- Paste your Flickr API key here
+      const apiKey = "YOUR_FLICKR_API_KEY_HERE"; // <-- Your API key stays here
       const userId = "185082625@N02";
-      const perPage = 250;
+      const perPage = 100; // Smaller batch size per page for safety
       const defaultProfile = `https://www.flickr.com/photos/${userId}/`;
 
       try {
-        // Step 1: Ask Flickr for page 1 to find out the total pages in your 5,000+ photo archive
+        // Step 1: Fetch page 1 to get the absolute total count of your photos and pages
         const initialUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1`;
         
         const initialRes = await fetch(initialUrl);
@@ -50,26 +50,27 @@
 
         const totalPages = initialData.photos.pages;
 
-        // Step 2: Pick a completely random page from anywhere in your archive history
+        // Step 2: Pick a completely random page anywhere from page 1 to the very last page of your archive
         const randomPage = Math.floor(Math.random() * totalPages) + 1;
 
-        let photos = initialData.photos.photo;
+        // Step 3: Fetch that specific random page
+        const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1`;
         
-        // If it picked a page other than page 1, fetch that specific random page
-        if (randomPage > 1) {
-          const randomPageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1`;
-          const pageRes = await fetch(randomPageUrl);
-          const pageData = await pageRes.json();
-          if (pageData.stat === "ok" && pageData.photos && pageData.photos.photo.length > 0) {
-            photos = pageData.photos.photo;
-          }
+        const pageRes = await fetch(randomPageUrl);
+        const pageData = await pageRes.json();
+
+        if (pageData.stat !== "ok" || !pageData.photos || pageData.photos.photo.length === 0) {
+          window.location.replace(defaultProfile);
+          return;
         }
 
-        // Step 3: Pick a random photo from that page's batch
+        const photos = pageData.photos.photo;
+
+        // Step 4: Pick a random photo from that random page's batch
         const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
         const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
 
-        // Step 4: Redirect instantly
+        // Step 5: Redirect instantly to the deep archive photo
         document.getElementById('fallback-link').href = photoUrl;
         window.location.replace(photoUrl);
 
