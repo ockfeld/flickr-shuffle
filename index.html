@@ -5,6 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shuffling Photo Archive...</title>
   <style>
+    /* Applied to html and body to eliminate any white canvas flash */
+    html, body {
+      background-color: #0d0d0d !important;
+      color: #aeaeae;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      letter-spacing: 1px;
+      height: 100vh;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    a {
+      color: #ffffff;
+      margin-top: 15px;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div>[ SHUFFLING PHOTO ARCHIVE... ]</div>
+  
+  <!-- Static fallback link so it renders immediately without JS -->
+  <div>
+    <a id="flickr-link" href="https://www.flickr.com/search/?user_id=185082625%40N02&sort=interestingness-desc&page=1&view_all=1">Click here if you are not redirected automatically.</a>
+  </div>
+
+  <script type="text/javascript">
+    (function() {
+      var searchTokens = [
+        "p", "img", "dsc", "dcim", "dscn", "pict",
+        "å", "ä", "ö",
+        "film", "det",
+        "a", "e", "i", "o", "u",
+        "_",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9"
+      ];
+      
+      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      var randomSeed = Math.floor(Math.random() * 9999999);
+      
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&text=" + encodeURIComponent(randomToken) +
+        "&sort=interestingness-desc" +
+        "&page=1" +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
+
+      // Update the static link href with the randomized token/seed
+      document.getElementById('flickr-link').href = destination;
+
+      // Wait 0.8 seconds before redirecting
+      setTimeout(function() {
+        window.location.replace(destination);
+      }, 800);
+    })();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shuffling Photo Archive...</title>
+  <style>
     /* Industrial dark-mode aesthetic - applied to html and body to prevent white flash */
     html, body {
       background-color: #0d0d0d;
