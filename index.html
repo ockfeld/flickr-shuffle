@@ -27,28 +27,33 @@
 </head>
 <body>
   <div id="splash">[ SHUFFLING PHOTO ARCHIVE... ]</div>
-  <a id="fallback-link" href="https://www.flickr.com/photos/185082625%40N02/">Click here if you are not redirected automatically.</a>
+  <a id="fallback-link" href="https://www.flickr.com/photos/185082625@N02/">Click here if you are not redirected automatically.</a>
 
   <script type="text/javascript">
     (function() {
-      // Paste your absolute archive link pool here. 
-      // Because this is local to your script, it bypasses Flickr completely and 
-      // guarantees a true, deep random pick across your entire history every single time.
+      // Your archive URL pool
       var archiveUrls = [
-        "https://www.flickr.com/photos/185082625%40N02/53000000000/", // Replace with actual deep archive URLs
-        "https://www.flickr.com/photos/185082625%40N02/52000000000/", 
-        "https://www.flickr.com/photos/185082625%40N02/51000000000/"
+        "https://www.flickr.com/photos/185082625@N02/53000000000/", 
+        "https://www.flickr.com/photos/185082625@N02/52000000000/", 
+        "https://www.flickr.com/photos/185082625@N02/51000000000/"
       ];
 
+      var defaultProfile = "https://www.flickr.com/photos/185082625@N02/";
+
       if (!archiveUrls || archiveUrls.length === 0) {
-        window.location.replace("https://www.flickr.com/photos/185082625%40N02/");
+        window.location.replace(defaultProfile);
         return;
       }
 
       var randomDestination = archiveUrls[Math.floor(Math.random() * archiveUrls.length)];
 
       document.getElementById('fallback-link').href = randomDestination;
-      window.location.replace(randomDestination);
+
+      // Optional: Uncomment the setTimeout below if you want a 400ms delay 
+      // so the retro splash text is visible for a split second before redirecting.
+      // setTimeout(function() {
+        window.location.replace(randomDestination);
+      // }, 400);
     })();
   </script>
 </body>
