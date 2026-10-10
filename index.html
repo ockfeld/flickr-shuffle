@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ockfeld archive // stream shuffle</title>
+  <title>ockfeld archive // deep shuffle</title>
   <style>
     :root {
       color-scheme: dark;
@@ -49,16 +49,32 @@
 
   <div class="splash-card">
     <div class="text-main">[ PULLING ARCHIVE PHOTO... ]</div>
-    <div class="text-sub">ockfeld portal // stream shuffle</div>
+    <div class="text-sub">ockfeld portal // full-stream sweep</div>
   </div>
 
   <script type="text/javascript">
     (function() {
-      // Random page across your photostream (adjust multiplier if needed for total pages)
-      var randomPage = Math.floor(Math.random() * 100) + 1; 
+      // Rotate sort vectors to pull from archive items, recent uploads, and highlights
+      var sortModes = [
+        "interestingness-desc",
+        "date-posted-asc",
+        "date-posted-desc",
+        "relevance"
+      ];
 
-      // Direct native photostream URL — completely free of search tokens and search bars
-      var destination = "https://www.flickr.com/photos/185082625@N02/page" + randomPage + "/";
+      var randomSort = sortModes[Math.floor(Math.random() * sortModes.length)];
+      
+      // Safe pagination range spanning the stream without exceeding boundaries
+      var randomPage = Math.floor(Math.random() * 100) + 1; 
+      var randomSeed = Math.floor(Math.random() * 999999999);
+
+      // Query the full stream directly without restrictive text bottlenecks
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&sort=" + randomSort +
+        "&page=" + randomPage +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
 
       requestAnimationFrame(function() {
         window.location.replace(destination);
