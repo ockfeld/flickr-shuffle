@@ -32,7 +32,7 @@
   </style>
 </head>
 <body>
-  <div id="status">[ STATUS: INITIALIZING SCRIPT... ]</div>
+  <div id="status">[ CONNECTING VIA JSONP... ]</div>
   <div id="details"></div>
 
   <script type="text/javascript">
@@ -43,55 +43,69 @@
       const statusEl = document.getElementById('status');
       const detailsEl = document.getElementById('details');
 
+      // Helper function for JSONP to bypass Flickr's CORS restriction on GitHub Pages
+      function callFlickrJSONP(methodParams) {
+        return new Promise((resolve, reject) => {
+          const callbackName = 'flickr_cb_' + Math.random().toString(36).substring(2, 9);
+          const script = document.createElement('script');
+          
+          window[callbackName] = function(data) {
+            delete window[callbackName];
+            if (script.parentNode) script.parentNode.removeChild(script);
+            resolve(data);
+          };
+
+          script.onerror = function() {
+            delete window[callbackName];
+            if (script.parentNode) script.parentNode.removeChild(script);
+            reject(new Error('JSONP script load error'));
+          };
+
+          script.src = `https://api.flickr.com/services/rest/?api_key=${apiKey}&format=json&jsoncallback=${callbackName}&${methodParams}`;
+          document.body.appendChild(script);
+        });
+      }
+
       try {
-        // Unique timestamp to force bypass of all caches
-        const cacheBuster = "&_t=" + Date.now();
-
-        statusEl.innerText = "[ STATUS: CONNECTING TO FLICKR API... ]";
+        statusEl.innerText = "[ STATUS: FETCHING ARCHIVE METADATA... ]";
         
-        const url = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=1&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const res = await fetch(url);
-        const data = await res.json();
+        // Step 1: Request page 1 to discover total pages and photos
+        const initialData = await callFlickrJSONP(`method=flickr.people.getPublicPhotos&user_id=${userId}&per_page=${perPage}&page=1`);
 
-        if (data.stat !== "ok") {
-          throw new Error("Flickr API Error: " + (data.message || JSON.stringify(data)));
+        if (initialData.stat !== "ok") {
+          throw new Error("Flickr API Error: " + (initialData.message || JSON.stringify(initialData)));
         }
 
-        const totalPages = data.photos.pages;
-        const totalPhotos = data.photos.total;
+        const totalPages = initialData.photos.pages;
+        const totalPhotos = initialData.photos.total;
 
-        statusEl.innerText = `[ STATUS: ARCHIVE FOUND (${totalPhotos} PHOTOS / ${totalPages} PAGES) ]`;
+        statusEl.innerText = `[ ARCHIVE LOADED: ${totalPhotos} PHOTOS / ${totalPages} PAGES ]`;
 
-        // Pick a truly random page across the entire archive history
+        // Step 2: Pick a completely random page across your entire history
         const randomPage = Math.floor(Math.random() * totalPages) + 1;
-        detailsEl.innerText = `Selected random page ${randomPage} out of ${totalPages}. Fetching...`;
+        detailsEl.innerText = `Selected random page ${randomPage} of ${totalPages}. Fetching deep history...`;
 
-        // Fetch that specific random page
-        const pageUrl = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&per_page=${perPage}&page=${randomPage}&format=json&nojsoncallback=1${cacheBuster}`;
-        
-        const pageRes = await fetch(pageUrl);
-        const pageData = await pageRes.json();
+        // Step 3: Fetch that specific random page via JSONP
+        const pageData = await callFlickrJSONP(`method=flickr.people.getPublicPhotos&user_id=${userId}&per_page=${perPage}&page=${randomPage}`);
 
         if (pageData.stat !== "ok" || !pageData.photos.photo.length) {
-          throw new Error("Failed to fetch photos from random page " + randomPage);
+          throw new Error("Failed to fetch photos from page " + randomPage);
         }
 
         const photos = pageData.photos.photo;
         const randomPhoto = photos[Math.floor(Math.random() * photos.length)];
         const photoUrl = `https://www.flickr.com/photos/${userId}/${randomPhoto.id}/`;
 
-        statusEl.innerText = `[ STATUS: SUCCESS! REDIRECTING... ]`;
-        detailsEl.innerText = `Target Photo ID: ${randomPhoto.id} (Page ${randomPage})`;
+        statusEl.innerText = `[ SUCCESS! REDIRECTING TO DEEP ARCHIVE... ]`;
+        detailsEl.innerText = `Photo ID: ${randomPhoto.id} (Page ${randomPage})`;
 
-        // Small delay so you can see it worked before jumping
-        setTimeout(function() {
+        setTimeout(() => {
           window.location.replace(photoUrl);
-        }, 800);
+        }, 700);
 
       } catch (err) {
         console.error(err);
-        statusEl.innerText = "[ STATUS: ERROR ENCOUNTERED ]";
+        statusEl.innerText = "[ ERROR DETECTED ]";
         detailsEl.style.color = "#ff5555";
         detailsEl.innerText = err.message;
       }
