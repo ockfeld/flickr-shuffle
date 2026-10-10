@@ -1,49 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8">
-  <title>Shuffling Photo Archive...</title>
-  <style>
-    body {
-      background-color: #0d0d0d;
-      color: #aeaeae;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-  </style>
-  <script type="text/javascript">
-    // Run at the earliest possible instant before rendering anything
-    (function() {
-      var searchTokens = [
-        "p", "img", "dsc", "dcim", "dscn", "pict",
-        "å", "ä", "ö",
-        "film", "det",
-        "a", "e", "i", "o", "u",
-        "_",
-        "1", "2", "3", "4", "5", "6", "7", "8", "9"
-      ];
-      
-      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
-      var randomSeed = Math.floor(Math.random() * 9999999);
-      
-      var destination = "https://www.flickr.com/search/?" +
-        "user_id=185082625%40N02" +
-        "&text=" + encodeURIComponent(randomToken) +
-        "&sort=interestingness-desc" +
-        "&page=1" +
-        "&view_all=1" +
-        "&_s=" + randomSeed;
-
-      // Force instant HTTP header redirect
-      window.location.href = destination;
-    })();
-  </script>
+  <meta http-equiv="refresh" content="0;url=https://www.flickr.com/search/?user_id=185082625%40N02&text=p&sort=interestingness-desc&page=1&view_all=1">
+  <title>Shuffling...</title>
 </head>
 <body>
 </body>
