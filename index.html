@@ -4,8 +4,41 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shuffling Photo Archive...</title>
+  
+  <script type="text/javascript">
+    (function() {
+      var searchTokens = [
+        "p", "img", "dsc", "dcim", "dscn", "pict",
+        "å", "ä", "ö",
+        "film", "det",
+        "a", "e", "i", "o", "u",
+        "_",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9"
+      ];
+      
+      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
+      var randomSeed = Math.floor(Math.random() * 9999999);
+      
+      var destination = "https://www.flickr.com/search/?" +
+        "user_id=185082625%40N02" +
+        "&text=" + encodeURIComponent(randomToken) +
+        "&sort=interestingness-desc" +
+        "&page=1" +
+        "&view_all=1" +
+        "&_s=" + randomSeed;
+
+      // Set fallback Meta Refresh tag dynamically for maximum browser speed
+      var meta = document.createElement('meta');
+      meta.httpEquiv = "refresh";
+      meta.content = "0;url=" + destination;
+      document.getElementsByTagName('head')[0].appendChild(meta);
+
+      // Instant JS redirect
+      window.location.replace(destination);
+    })();
+  </script>
+
   <style>
-    /* Industrial dark-mode aesthetic */
     body {
       background-color: #0d0d0d;
       color: #aeaeae;
@@ -28,36 +61,5 @@
 </head>
 <body>
   <div>[ SHUFFLING PHOTO ARCHIVE... ]</div>
-
-  <script type="text/javascript">
-    (function() {
-      // Cleaned token pool for photo searches
-      var searchTokens = [
-        "p", "img", "dsc", "dcim", "dscn", "pict",
-        "å", "ä", "ö",
-        "film", "det",
-        "a", "e", "i", "o", "u",
-        "_",
-        "1", "2", "3", "4", "5", "6", "7", "8", "9"
-      ];
-      
-      var randomToken = searchTokens[Math.floor(Math.random() * searchTokens.length)];
-      var randomSeed = Math.floor(Math.random() * 9999999);
-      
-      var destination = "https://www.flickr.com/search/?" +
-        "user_id=185082625%40N02" +
-        "&text=" + encodeURIComponent(randomToken) +
-        "&sort=interestingness-desc" +
-        "&page=1" +
-        "&view_all=1" +
-        "&_s=" + randomSeed;
-
-      // Fallback link in case redirect is delayed or blocked
-      document.write('<a href="' + destination + '">Click here if you are not redirected automatically.</a>');
-
-      // Instant redirect
-      window.location.replace(destination);
-    })();
-  </script>
 </body>
 </html>
