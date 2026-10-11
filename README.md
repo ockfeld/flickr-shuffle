@@ -1,8 +1,6 @@
 # flickr-shuffle
 
-<a href="https://github.com">
-  <img width="92" height="92" alt="holy shit" src="https://github.com/user-attachments/assets/9b3ed7a9-dce4-49ed-b198-7bcc9c1dfcad" />
-</a>
+<img width="92" height="92" alt="holy shit" src="https://github.com/user-attachments/assets/9b3ed7a9-dce4-49ed-b198-7bcc9c1dfcad" />
 
 
 
